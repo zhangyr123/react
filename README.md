@@ -1,2 +1,2 @@
 # react
-react studying
+react studying demo
