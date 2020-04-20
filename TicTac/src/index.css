@@ -4,7 +4,9 @@ body {
 }
 
 ol, ul {
+  padding-top: 0px;
   padding-left: 30px;
+  margin: 0px;
 }
 
 .board-row:after {
@@ -43,4 +45,50 @@ ol, ul {
 
 .game-info {
   margin-left: 20px;
+}
+
+.active-step {
+  font-weight: bold;
+}
+
+.active-grid {
+  background-color: forestgreen;
+}
+
+.app-sort {
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.step {
+  /* background: #fff; */
+  /* border: 1px solid #999; */
+  /* font-size: 24px; */
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0 15px;
+  text-align: left;
+  width: 200px;
+}
+
+.board-top {
+  padding:5px 0;
+  margin: 10px 0;
+}
+
+.btn {
+  float: left;
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding: 3px 10px;
+  height: 20px;
+  margin: 10px;
+}
+
+.sort-btn {
+  width: 20px;
+  margin-left: 30px;
 }
