@@ -26,11 +26,11 @@ import * as serviceWorker from './serviceWorker';
 //   getGreeting(user)
 // )
 
-const element = (
-  <h1 className="greeting">
-    Hello, world!
-  </h1>
-)
+// const element = (
+//   <h1 className="greeting">
+//     Hello, world!
+//   </h1>
+// )
 
 // const element = React.createElement(
 //   'h1',
@@ -38,13 +38,26 @@ const element = (
 //   'Hello, world!'
 // )
 
-ReactDOM.render(
-  // <React.StrictMode>
-  //   <App />
-  // </React.StrictMode>,
-  element,
-  document.getElementById('root')
-);
+// 计时器
+function tick() {
+  const element = (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {new Date().toLocaleTimeString()}.</h2>
+    </div>
+  )
+  ReactDOM.render(element, document.getElementById('root'))
+}
+
+setInterval(tick, 1000)
+
+// ReactDOM.render(
+//   // <React.StrictMode>
+//   //   <App />
+//   // </React.StrictMode>,
+//   element,
+//   document.getElementById('root')
+// );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
