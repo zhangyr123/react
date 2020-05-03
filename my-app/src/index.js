@@ -148,23 +148,97 @@ import * as serviceWorker from './serviceWorker';
 //   document.getElementById('root')
 // )
 
-// 封装可复用的组件
-function Clock(props) {
+// 封装可复用的函数组件
+// function Clock(props) {
+//   return (
+//     <div>
+//       <h1>Hello, world!</h1>
+//       <h2>It is {props.date.toLocaleTimeString()}.</h2>
+//     </div>
+//   )
+// }
+
+// 封装class组件
+// class Clock extends React.Component {
+//   render() {
+//     return (
+//       <div>
+//         <h1>Hello, world!</h1>
+//         <h2>It is {this.props.date.toLocaleTimeString()}.</h2>
+//       </div>
+//     )
+//   }
+// }
+class Clock extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {date: new Date()}
+  }
+
+  componentDidMount() {
+    // 挂载：组件已经被渲染到DOM中后运行
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    )
+  }
+
+  componentWillUnmount() {
+    // 卸载
+    clearInterval(this.timerID)
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    )
+  }
+}
+
+// ReactDOM.render(
+//   <Clock />,
+//   document.getElementById('root')
+// )
+
+function App() {
   return (
     <div>
-      <h1>Hello, world!</h1>
-      <h2>It is {props.date.toLocaleTimeString()}.</h2>
+      <Clock />
+      <Clock />
+      <Clock />
     </div>
   )
 }
-function tick() {
-  ReactDOM.render(
-    <Clock date={new Date()} />,
-    document.getElementById('root')
-  )
-}
 
-setInterval(tick, 1000)
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+// props 和 state 会异步更新,所以要放在一个函数里面
+// this.setState((state, props) => ({
+//   counter: state.counter + props.increment
+// }))
+
+
+// function tick() {
+//   ReactDOM.render(
+//     // <Clock date={new Date()} />,
+//     <Clock />,
+//     document.getElementById('root')
+//   )
+// }
+
+// setInterval(tick, 1000)
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
