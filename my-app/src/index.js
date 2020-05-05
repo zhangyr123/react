@@ -528,46 +528,190 @@ import * as serviceWorker from './serviceWorker';
 //   document.getElementById('root')
 // )
 
-class Reservation extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isGoing: true,
-      numberOfGuests: 2
-    }
+// class Reservation extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     this.state = {
+//       isGoing: true,
+//       numberOfGuests: 2
+//     }
 
-    this.handleInputChange = this.handleInputChange.bind(this)
+//     this.handleInputChange = this.handleInputChange.bind(this)
+//   }
+
+//   handleInputChange(event) {
+//     const target = event.target
+//     const value = target.name === 'isGoing' ? target.checked : target.value
+//     const name = target.name
+
+//     this.setState({
+//       [name]: value
+//     })
+//   }
+
+//   render() {
+//     return (
+//       <form>
+//         <label>
+//           参与：
+//           <input name="isGoing" type="checkbox" checked={this.state.isGoing} onChange={this.handleInputChange} />
+//         </label>
+//         <br />
+//         <label>
+//           来宾人数：
+//           <input name="numberOfGuests" type="number" value={this.state.numberOfGuests} onChange={this.handleInputChange} />
+//         </label>
+//       </form>
+//     )
+//   }
+// }
+
+// ReactDOM.render(
+//   <Reservation />,
+//   document.getElementById('root')
+// )
+
+// 状态提升,如果其他组件需要某个组件的state，应将state提升至它们共同的父组件中。
+// 方法：父组件 onTemperatureChange={this.handleCelsiusChange}
+//      子组件 this.props.onTemperatureChange(e.target.value)
+// 解释：
+//      this.props是父组件绑的值，包括变量和方法
+//      状态提升就是，子组件通过自身绑定的方法调用（激活）父组件的方法并给其传值，个人理解有点类似于vue的this.$emit(语法糖)
+//
+// 顺便复习vue父子组件的传值：
+// 自定义组件：
+// 父组件：
+// 第一步引入：import TodoList from '...(todoList.vue)'
+// 第二步注册： 
+// ````
+// export.default {
+//   components: {TodoList},
+//   data() {
+//     return {
+//       ...
+//     }
+//   },
+//   methods: {
+//     fun1(val) { // val是子组件传的值
+//       ...
+//     }
+//   }
+// }
+// ````
+// 第三步使用：<TodoList :content="data" @change="fun1"></TodoList>
+// 解释  ：传的是变量值，@传的是方法
+// 子组件：'todoList.vue'
+// ```
+// export.default {
+//   components: {},
+//   props: ['content'],
+//   data() {
+//      return {
+//         data1: ''
+//      }
+//   },
+//   methods: {
+//      fun() {
+//         this.$emit('change', this.data1) // 此时的data1是子组件传给父组件的（语法糖）
+//      }
+//   }
+// }
+// ```
+function BoilingVerdict(props) {
+  if(props.celsius >= 100) {
+    return <p>The water would boil.</p>
+  }
+  return <p>The water would not boil.</p>
+}
+
+const scaleNames = {
+  c: 'Celsius',
+  f: 'Fahrenheit'
+}
+
+class TemperatureInput extends React.Component {
+  constructor(props) {
+    super(props) 
+    this.handleChange = this.handleChange.bind(this)
+    this.state = {temperature: ''}
   }
 
-  handleInputChange(event) {
-    const target = event.target
-    const value = target.name === 'isGoing' ? target.checked : target.value
-    const name = target.name
-
-    this.setState({
-      [name]: value
-    })
+  handleChange(e) {
+    console.log('TemperatureInput e: ', e.target.value)
+    // this.setState({temperature: e.target.value})
+    this.props.onTemperatureChange(e.target.value)
   }
 
   render() {
+    // props是只读的
+    console.log('this.props: ', this.props)
+    const temperature = this.props.temperature
+    const scale = this.props.scale
     return (
-      <form>
-        <label>
-          参与：
-          <input name="isGoing" type="checkbox" checked={this.state.isGoing} onChange={this.handleInputChange} />
-        </label>
-        <br />
-        <label>
-          来宾人数：
-          <input name="numberOfGuests" type="number" value={this.state.numberOfGuests} onChange={this.handleInputChange} />
-        </label>
-      </form>
+      <fieldset>
+        <legend>Enter temperature in {scaleNames[scale]}:</legend>
+        <input value={temperature} onChange={this.handleChange} />
+      </fieldset>
     )
   }
 }
 
+class Calculator extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleCelsiusChange = this.handleCelsiusChange.bind(this)
+    this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this)
+    this.state = {temperature: '', scale: 'c'}
+  }
+
+  handleCelsiusChange(temperature) {
+    console.log('Calculator temperature: ', temperature)
+    this.setState({scale: 'c', temperature})
+  }
+
+  handleFahrenheitChange(temperature) {
+    this.setState({scale: 'f', temperature})
+  }
+
+  render() {
+    const scale = this.state.scale
+    const temperature = this.state.temperature
+    const celsius = scale === 'f' ? tryConvert(temperature, toCelsius, '1') : temperature
+    const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit, '2') : temperature
+
+    return (
+      <div>
+        {`this.state ${JSON.stringify(this.state)}`}
+        <TemperatureInput scale="c" temperature={celsius} onTemperatureChange={this.handleCelsiusChange} />
+        <TemperatureInput scale="f" temperature={fahrenheit} onTemperatureChange={this.handleFahrenheitChange} />
+        <BoilingVerdict celsius={parseFloat(celsius)} />
+      </div>
+    )
+  }
+}
+
+function toCelsius(fahrenheit) {
+  return (fahrenheit - 32) * 5 / 9
+}
+
+function toFahrenheit(celsius) {
+  return (celsius * 9 / 5) + 32
+}
+
+function tryConvert(temperature, convert, str) {
+  console.log('str: ', str)
+  console.log('convert: ', convert)
+  const input = parseFloat(temperature)
+  if(Number.isNaN(input)) {
+    return ''
+  }
+  const output = convert(input)
+  const rounded = Math.round(output * 1000) / 1000
+  return rounded.toString()
+}
+
 ReactDOM.render(
-  <Reservation />,
+  <Calculator />,
   document.getElementById('root')
 )
 
