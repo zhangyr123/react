@@ -743,44 +743,126 @@ import * as serviceWorker from './serviceWorker';
 // )
 
 // 类似vue的slot
-function Contacts() {
-  return <div className="Contacts" />
-}
+// function Contacts() {
+//   return <div className="Contacts" />
+// }
 
-function Chat() {
-  return <div className="Chat" />
-}
+// function Chat() {
+//   return <div className="Chat" />
+// }
 
-function SplitPane(props) {
+// function SplitPane(props) {
+//   return (
+//     <div className="SplitPane">
+//       <div className="SplitPane-left">
+//         {props.left}
+//       </div>
+//       <div className="SplitPane-right">
+//         {props.right}
+//       </div>
+//     </div>
+//   )
+// }
+
+// function App() {
+//   return (
+//     <SplitPane 
+//       left={
+//         <Contacts />
+//       }
+//       right={
+//         <Chat />
+//       }
+//     />
+//   )
+// }
+
+// ReactDOM.render(
+//   <App />,
+//   document.getElementById('root')
+// )
+
+// 特殊的组件组合function
+function FancyBorder(props) {
+  console.log('FancyBorder props: ', props)
   return (
-    <div className="SplitPane">
-      <div className="SplitPane-left">
-        {props.left}
-      </div>
-      <div className="SplitPane-right">
-        {props.right}
-      </div>
+    <div className={'FancyBorder FancyBorder-' + props.color}>
+      {props.children}
     </div>
   )
 }
-
-function App() {
+// function Dialog(props) {
+//   console.log('Dialog props: ', props)
+//   return (
+//     <FancyBorder color="blue">
+//       <h1 className="Dialog-title">
+//         {props.title}
+//       </h1>
+//       <p className="Dialog-message">
+//         {props.message}
+//       </p>
+//     </FancyBorder>
+//   )
+// }
+// function WelcomeDialog() {
+//   return (
+//     <Dialog 
+//       title="Welcome"
+//       message="Thank you for visiting our spacecraft!"
+//     />
+//   )
+// }
+// ReactDOM.render(
+//   <WelcomeDialog />,
+//   document.getElementById('root')
+// )
+// 特殊的组件组合class形式
+function Dialog(props) {
+  console.log('Dialog props: ', props)
   return (
-    <SplitPane 
-      left={
-        <Contacts />
-      }
-      right={
-        <Chat />
-      }
-    />
+    <FancyBorder color="blue">
+      <h1 className="Dialog-title">
+        {props.title}
+      </h1>
+      <p className="Dialog-message">
+        {props.message}
+      </p>
+      {props.children}
+    </FancyBorder>
   )
+}
+class SignUpDialog extends React.Component {
+  constructor(props) {
+     super(props)
+     this.handleChange = this.handleChange.bind(this)
+     this.handleSignUp = this.handleSignUp.bind(this)
+     this.state = {login: ''}
+  }
+  handleChange(e) {
+    this.setState({login: e.target.value})
+  }
+  handleSignUp() {
+    alert(`Welcome aboard, ${this.state.login}!`)
+  }
+  render() {
+    return (
+      <Dialog 
+        title="Mars Exploration Program" 
+        message="How should we refer to you?">
+        <input value={this.state.login} onChange={this.handleChange} />
+        <button onClick={this.handleSignUp}>
+          Sign Me Up!
+        </button>
+      </Dialog>
+    )
+  }
 }
 
 ReactDOM.render(
-  <App />,
+  <SignUpDialog />,
   document.getElementById('root')
 )
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
