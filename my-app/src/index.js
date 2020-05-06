@@ -716,29 +716,69 @@ import * as serviceWorker from './serviceWorker';
 // )
 
 // 组件的包含，利用JSX嵌套，将任意组件作为子组件传递给它们
-function FancyBorder(props) {
+// function FancyBorder(props) {
+//   return (
+//     <div className={'FancyBorder FancyBorder-' + props.color}>
+//       {props.children}
+//     </div>
+//   )
+// }
+
+// function WelcomeDialog() {
+//   return (
+//     <FancyBorder color="blue">
+//       <h1 className="Dialog-title">
+//         Welcome
+//       </h1>
+//       <p className="Dialog-title">
+//         Thank you for visiting our spacecraft!
+//       </p>
+//     </FancyBorder>
+//   )
+// }
+
+// ReactDOM.render(
+//   <WelcomeDialog />,
+//   document.getElementById('root')
+// )
+
+// 类似vue的slot
+function Contacts() {
+  return <div className="Contacts" />
+}
+
+function Chat() {
+  return <div className="Chat" />
+}
+
+function SplitPane(props) {
   return (
-    <div className={'FancyBorder FancyBorder-' + props.color}>
-      {props.children}
+    <div className="SplitPane">
+      <div className="SplitPane-left">
+        {props.left}
+      </div>
+      <div className="SplitPane-right">
+        {props.right}
+      </div>
     </div>
   )
 }
 
-function WelcomeDialog() {
+function App() {
   return (
-    <FancyBorder color="blue">
-      <h1 className="Dialog-title">
-        Welcome
-      </h1>
-      <p className="Dialog-title">
-        Thank you for visiting our spacecraft!
-      </p>
-    </FancyBorder>
+    <SplitPane 
+      left={
+        <Contacts />
+      }
+      right={
+        <Chat />
+      }
+    />
   )
 }
 
 ReactDOM.render(
-  <WelcomeDialog />,
+  <App />,
   document.getElementById('root')
 )
 
